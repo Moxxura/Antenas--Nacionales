@@ -1,192 +1,40 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Antenas REAL - WhatsApp Mundial</title>
-<link rel="manifest" href="manifest.json">
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage-compat.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#111b21;color:white;height:100vh;display:flex;flex-direction:column}
-header{background:#202c33;padding:12px;display:flex;justify-content:space-between}
-header b{color:#00a884}
-.tabs{display:flex;background:#202c33}
-.tab{flex:1;padding:12px;text-align:center;opacity:0.6;border-bottom:3px solid transparent;cursor:pointer}
-.tab.active{opacity:1;border-color:#00a884;color:#00a884}
-.view{flex:1;overflow-y:auto;padding:10px;display:none;background:#0b141a}
-.view.active{display:block}
-.card{background:#202c33;padding:12px;border-radius:10px;margin:8px 0;display:flex;gap:10px;align-items:center;cursor:pointer}
-.avatar{width:45px;height:45px;background:#00a884;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:black}
-input{width:100%;padding:12px;border-radius:20px;border:none;background:#2a3942;color:white;margin:5px 0}
-button{background:#00a884;color:white;border:none;padding:12px 20px;border-radius:20px;font-weight:bold;width:100%;margin-top:8px;cursor:pointer}
-.msg{max-width:75%;padding:8px 12px;border-radius:8px;margin:6px;background:#202c33;word-break:break-word}
-.msg.mine{background:#005c4b;margin-left:auto}
-.muro-post{background:#202c33;padding:15px;border-radius:12px;margin:10px 0}
-.muro-post img{width:100%;border-radius:10px;margin-top:8px}
-#chatBox{height:65vh;overflow-y:auto;padding:10px}
-#chatInput{display:flex;gap:5px;padding:10px;background:#202c33}
-</style>
+  <meta charset="utf-8">
+  <title>Antenas Nacionales</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCW48tHkz4CwnJ_t60U8nZlvOmUxvA6uIE",
+      authDomain: "antenas-nacionales.firebaseapp.com",
+      databaseURL: "https://antenas-nacionales-default-rtdb.firebaseio.com",
+      projectId: "antenas-nacionales",
+      storageBucket: "antenas-nacionales.firebasestorage.app",
+      messagingSenderId: "264813695600",
+      appId: "1:264813695600:web:30d0a8a18bfa8cfb131ab5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.registrar = async function() {
+      const numero = document.getElementById('numero').value;
+      if(!numero) return alert('Pon tu numero 753');
+      
+      await setDoc(doc(db, "users", numero), {
+        numero: numero,
+        fecha: new Date().toISOString()
+      });
+      alert('Registrado con éxito bb: ' + numero);
+    }
+  </script>
 </head>
 <body>
-<header><b>Antenas REAL 🌐</b><span id="miNumero" style="font-size:11px;opacity:0.7"></span></header>
-
-<div id="loginView" style="padding:30px;text-align:center">
-<h2 style="color:#00a884">WhatsApp Mundial</h2>
-<p style="opacity:0.7;margin:10px 0">10,000,000 de números 753 disponibles<br>Sin INE - Solo con WiFi</p>
-<input id="nombre" placeholder="Tu apodo bb">
-<button onclick="registrarse()">Obtener mi número 753</button>
-<p style="font-size:11px;margin-top:15px;opacity:0.5">Libre - Sin registro del gobierno</p>
-</div>
-
-<div id="appView" style="display:none;flex:1;flex-direction:column">
-<div class="tabs">
-<div class="tab active" onclick="showTab('chats')">CHATS</div>
-<div class="tab" onclick="showTab('usuarios')">NÚMEROS 753</div>
-<div class="tab" onclick="showTab('muro')">MURO</div>
-</div>
-<div id="chatsView" class="view active"><div id="listaChats"></div></div>
-<div id="usuariosView" class="view"><div id="listaUsuarios"></div></div>
-<div id="muroView" class="view">
-<input id="postTexto" placeholder="¿Qué estás pensando?">
-<input type="file" id="postFoto" accept="image/*">
-<button onclick="publicarMuro()">Publicar en muro</button>
-<div id="listaMuro"></div>
-</div>
-<div id="chatPrivado" style="display:none;flex:1;flex-direction:column">
-<div style="background:#202c33;padding:10px;display:flex;align-items:center;gap:10px"><span onclick="cerrarChat()" style="font-size:20px;cursor:pointer">←</span><b id="chatConNombre"></b></div>
-<div id="chatBox"></div>
-<div id="chatInput"><input id="msgTexto" placeholder="Mensaje" style="flex:1"><button onclick="enviarMensaje()" style="width:55px">➤</button></div>
-</div>
-</div>
-
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDUMMY_PON_TU_API_KEY_REAL",
-  authDomain: "antenas-nacionales.firebaseapp.com",
-  projectId: "antenas-nacionales",
-  storageBucket: "antenas-nacionales.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abc123"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-let yo = JSON.parse(localStorage.getItem('antenas_yo') || 'null');
-let chatActual = null;
-let unsubChat = null;
-
-if(yo) mostrarApp();
-
-async function registrarse(){
- let nombre=document.getElementById('nombre').value.trim();
- if(nombre.length<2) return alert('Pon tu apodo bb');
- // Genera número 753 de Lázaro único
- let num = "753 " + Math.floor(100 + Math.random()*900) + " " + Math.floor(1000 + Math.random()*9000);
- let comercial = "+52 1 " + num;
- let idUnico = "ANT-" + Date.now() + "-" + Math.random().toString(36).substring(2,7).toUpperCase();
- let data = {nombre, comercial, idUnico, num753: num, fecha: firebase.firestore.FieldValue.serverTimestamp()};
- let docId = idUnico;
- await db.collection("usuarios").doc(docId).set(data);
- yo=data; yo.docId=docId;
- localStorage.setItem('antenas_yo', JSON.stringify(yo));
- mostrarApp();
-}
-
-function mostrarApp(){
- document.getElementById('loginView').style.display='none';
- document.getElementById('appView').style.display='flex';
- document.getElementById('miNumero').innerText = yo.comercial;
- cargarUsuarios(); cargarMuro(); cargarChats();
-}
-
-function showTab(t){
- document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
- document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
- document.getElementById('chatPrivado').style.display='none';
- document.querySelectorAll('.tabs')[0].style.display='flex';
- if(t==='chats'){document.querySelectorAll('.tab')[0].classList.add('active');document.getElementById('chatsView').classList.add('active')}
- if(t==='usuarios'){document.querySelectorAll('.tab')[1].classList.add('active');document.getElementById('usuariosView').classList.add('active')}
- if(t==='muro'){document.querySelectorAll('.tab')[2].classList.add('active');document.getElementById('muroView').classList.add('active')}
-}
-
-function cargarUsuarios(){
- db.collection("usuarios").orderBy("fecha","desc").limit(100).onSnapshot(snap=>{
-   let html="";
-   snap.forEach(doc=>{
-     let u=doc.data();
-     if(u.idUnico===yo.idUnico) return;
-     html+=`<div class="card" onclick="abrirChat('${doc.id}','${u.nombre}','${u.comercial}')"><div class="avatar">${u.nombre[0].toUpperCase()}</div><div style="flex:1"><b>${u.nombre}</b><br><span style="color:#00a884;font-size:13px">${u.comercial}</span></div><div>💬</div></div>`;
-   });
-   document.getElementById('listaUsuarios').innerHTML=html||"<p style='text-align:center;opacity:0.6;margin-top:30px'>Tú eres el primero bb<br>Comparte el link de tu GitHub</p>";
- });
-}
-
-function abrirChat(id, nombre, comercial){
- chatActual = id;
- document.getElementById('chatConNombre').innerText = nombre + " " + comercial;
- document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
- document.getElementById('chatPrivado').style.display='flex';
- document.querySelectorAll('.tabs')[0].style.display='none';
- let chatId = [yo.docId, id].sort().join("_");
- if(unsubChat) unsubChat();
- unsubChat = db.collection("chats").doc(chatId).collection("mensajes").orderBy("fecha").onSnapshot(snap=>{
-   let html=""; snap.forEach(d=>{
-     let m=d.data(); let mine = m.de===yo.docId;
-     html+=`<div class="msg ${mine?'mine':''}"><b style="font-size:11px">${mine?'Tú':m.nombre}</b><br>${m.texto}</div>`;
-   });
-   document.getElementById('chatBox').innerHTML=html;
-   document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
- });
- cargarChats();
-}
-
-function cerrarChat(){
- document.getElementById('chatPrivado').style.display='none';
- document.querySelectorAll('.tabs')[0].style.display='flex';
- showTab('chats');
- if(unsubChat) unsubChat();
- chatActual=null;
-}
-
-async function enviarMensaje(){
- let texto=document.getElementById('msgTexto').value.trim();
- if(!texto ||!chatActual) return;
- let chatId = [yo.docId, chatActual].sort().join("_");
- await db.collection("chats").doc(chatId).collection("mensajes").add({
-   texto, de: yo.docId, nombre: yo.nombre, fecha: firebase.firestore.FieldValue.serverTimestamp()
- });
- await db.collection("chats").doc(chatId).set({participantes:[yo.docId, chatActual], ultimo:texto, fecha: firebase.firestore.FieldValue.serverTimestamp()});
- document.getElementById('msgTexto').value="";
-}
-
-function cargarChats(){
- db.collection("chats").where("participantes","array-contains", yo.docId).orderBy("fecha","desc").onSnapshot(snap=>{
-   let html=""; snap.forEach(doc=>{
-     let c=doc.data(); let otroId = c.participantes.find(x=>x!==yo.docId);
-     html+=`<div class="card" onclick="db.collection('usuarios').doc('${otroId}').get().then(d=>abrirChat('${otroId}',d.data().nombre,d.data().comercial))"><div class="avatar">💬</div><div style="flex:1"><b>Chat ${otroId.substring(0,6)}</b><br><span style="opacity:0.6;font-size:13px">${c.ultimo||''}</span></div></div>`;
-   });
-   document.getElementById('listaChats').innerHTML=html||"<p style='text-align:center;opacity:0.6;margin-top:20px'>Aún no tienes chats<br>Ve a NÚMEROS 753</p>";
- });
-}
-
-async function publicarMuro(){
- let texto=document.getElementById('postTexto').value.trim();
- if(!texto) return alert('Escribe algo bb');
- await db.collection("muro").add({texto, nombre:yo.nombre, comercial:yo.comercial, fecha: firebase.firestore.FieldValue.serverTimestamp()});
- document.getElementById('postTexto').value="";
-}
-
-function cargarMuro(){
- db.collection("muro").orderBy("fecha","desc").limit(50).onSnapshot(snap=>{
-   let html=""; snap.forEach(doc=>{
-     let p=doc.data(); html+=`<div class="muro-post"><b>${p.nombre}</b> <span style="color:#00a884;font-size:11px">${p.comercial}</span><p style="margin-top:8px">${p.texto}</p></div>`;
-   });
-   document.getElementById('listaMuro').innerHTML=html;
- });
-}
-</script>
+  <h2>Antenas Nacionales 753</h2>
+  <input id="numero" placeholder="Tu numero 753" />
+  <button onclick="registrar()">Registrar</button>
 </body>
 </html>
