@@ -35,17 +35,16 @@ button{background:#00a884;color:white;border:none;padding:12px 20px;border-radiu
 
 <div id="loginView" style="padding:30px;text-align:center">
 <h2 style="color:#00a884">WhatsApp Mundial</h2>
-<p style="opacity:0.7;margin:10px 0">10,000,000 de números disponibles<br>Funciona con WiFi y Datos</p>
-<input id="nombre" placeholder="Tu nombre">
-<input id="telReal" type="tel" placeholder="Tu número real 10 dígitos">
-<button onclick="registrarse()">Obtener mi número mundial</button>
-<p style="font-size:11px;margin-top:15px;opacity:0.5">Cualquiera puede registrarse</p>
+<p style="opacity:0.7;margin:10px 0">10,000,000 de números 753 disponibles<br>Sin INE - Solo con WiFi</p>
+<input id="nombre" placeholder="Tu apodo bb">
+<button onclick="registrarse()">Obtener mi número 753</button>
+<p style="font-size:11px;margin-top:15px;opacity:0.5">Libre - Sin registro del gobierno</p>
 </div>
 
 <div id="appView" style="display:none;flex:1;flex-direction:column">
 <div class="tabs">
 <div class="tab active" onclick="showTab('chats')">CHATS</div>
-<div class="tab" onclick="showTab('usuarios')">NÚMEROS</div>
+<div class="tab" onclick="showTab('usuarios')">NÚMEROS 753</div>
 <div class="tab" onclick="showTab('muro')">MURO</div>
 </div>
 <div id="chatsView" class="view active"><div id="listaChats"></div></div>
@@ -59,45 +58,50 @@ button{background:#00a884;color:white;border:none;padding:12px 20px;border-radiu
 <div id="chatPrivado" style="display:none;flex:1;flex-direction:column">
 <div style="background:#202c33;padding:10px;display:flex;align-items:center;gap:10px"><span onclick="cerrarChat()" style="font-size:20px;cursor:pointer">←</span><b id="chatConNombre"></b></div>
 <div id="chatBox"></div>
-<div id="chatInput"><input id="msgTexto" placeholder="Mensaje" style="flex:1"><input type="file" id="msgFoto" accept="image/*" style="width:35px"><button onclick="enviarMensaje()" style="width:55px">➤</button></div>
+<div id="chatInput"><input id="msgTexto" placeholder="Mensaje" style="flex:1"><button onclick="enviarMensaje()" style="width:55px">➤</button></div>
 </div>
 </div>
 
 <script>
-// ==== PEGA AQUI TU CONFIG DE FIREBASE ====
 const firebaseConfig = {
-  apiKey: "TU_API_KEY_AQUI",
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE",
-  messagingSenderId: "TU_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyDUMMY_PON_TU_API_KEY_REAL",
+  authDomain: "antenas-nacionales.firebaseapp.com",
+  projectId: "antenas-nacionales",
+  storageBucket: "antenas-nacionales.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc123"
 };
-// ==========================================
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const storage = firebase.storage();
 let yo = JSON.parse(localStorage.getItem('antenas_yo') || 'null');
 let chatActual = null;
+let unsubChat = null;
+
 if(yo) mostrarApp();
 
 async function registrarse(){
  let nombre=document.getElementById('nombre').value.trim();
- let tel=document.getElementById('telReal').value.trim();
- if(nombre.length<2 || tel.length<10) return alert('Pon nombre y número de 10 dígitos bb');
- let comercial = "+52 1 55 " + String(1000000 + Math.floor(Math.random()*9000000)).substring(0,4) + " " + String(1000000 + Math.floor(Math.random()*9000000)).substring(3,7);
- let idUnico = "ANT-" + Date.now();
- let data = {nombre, telReal:tel, comercial, idUnico, fecha: firebase.firestore.FieldValue.serverTimestamp()};
- await db.collection("usuarios").doc(tel).set(data);
- yo=data; localStorage.setItem('antenas_yo', JSON.stringify(yo)); mostrarApp();
+ if(nombre.length<2) return alert('Pon tu apodo bb');
+ // Genera número 753 de Lázaro único
+ let num = "753 " + Math.floor(100 + Math.random()*900) + " " + Math.floor(1000 + Math.random()*9000);
+ let comercial = "+52 1 " + num;
+ let idUnico = "ANT-" + Date.now() + "-" + Math.random().toString(36).substring(2,7).toUpperCase();
+ let data = {nombre, comercial, idUnico, num753: num, fecha: firebase.firestore.FieldValue.serverTimestamp()};
+ let docId = idUnico;
+ await db.collection("usuarios").doc(docId).set(data);
+ yo=data; yo.docId=docId;
+ localStorage.setItem('antenas_yo', JSON.stringify(yo));
+ mostrarApp();
 }
+
 function mostrarApp(){
  document.getElementById('loginView').style.display='none';
  document.getElementById('appView').style.display='flex';
  document.getElementById('miNumero').innerText = yo.comercial;
  cargarUsuarios(); cargarMuro(); cargarChats();
 }
+
 function showTab(t){
  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
@@ -107,48 +111,79 @@ function showTab(t){
  if(t==='usuarios'){document.querySelectorAll('.tab')[1].classList.add('active');document.getElementById('usuariosView').classList.add('active')}
  if(t==='muro'){document.querySelectorAll('.tab')[2].classList.add('active');document.getElementById('muroView').classList.add('active')}
 }
-async function cargarUsuarios(){
- db.collection("usuarios").onSnapshot(snap=>{
-   let html=""; snap.forEach(doc=>{let u=doc.data(); if(u.telReal===yo.telReal) return; html+=`<div class="card" onclick="abrirChat('${u.telReal}','${u.nombre}','${u.comercial}')"><div class="avatar">${u.nombre[0].toUpperCase()}</div><div style="flex:1"><b>${u.nombre}</b><br><span style="color:#00a884;font-size:13px">${u.comercial}</span></div><div>💬</div></div>`;});
-   document.getElementById('listaUsuarios').innerHTML=html||"<p style='text-align:center;opacity:0.6;margin-top:30px'>Tú eres el primero bb<br>Comparte el link</p>";
+
+function cargarUsuarios(){
+ db.collection("usuarios").orderBy("fecha","desc").limit(100).onSnapshot(snap=>{
+   let html="";
+   snap.forEach(doc=>{
+     let u=doc.data();
+     if(u.idUnico===yo.idUnico) return;
+     html+=`<div class="card" onclick="abrirChat('${doc.id}','${u.nombre}','${u.comercial}')"><div class="avatar">${u.nombre[0].toUpperCase()}</div><div style="flex:1"><b>${u.nombre}</b><br><span style="color:#00a884;font-size:13px">${u.comercial}</span></div><div>💬</div></div>`;
+   });
+   document.getElementById('listaUsuarios').innerHTML=html||"<p style='text-align:center;opacity:0.6;margin-top:30px'>Tú eres el primero bb<br>Comparte el link de tu GitHub</p>";
  });
 }
-function abrirChat(tel,nombre,comercial){
- chatActual={tel,nombre,comercial}; document.getElementById('chatConNombre').innerText=nombre+" - "+comercial;
- document.getElementById('chatPrivado').style.display='flex'; document.querySelectorAll('.view').forEach(x=>x.style.display='none'); document.querySelectorAll('.tabs')[0].style.display='none';
- escucharMensajes();
+
+function abrirChat(id, nombre, comercial){
+ chatActual = id;
+ document.getElementById('chatConNombre').innerText = nombre + " " + comercial;
+ document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+ document.getElementById('chatPrivado').style.display='flex';
+ document.querySelectorAll('.tabs')[0].style.display='none';
+ let chatId = [yo.docId, id].sort().join("_");
+ if(unsubChat) unsubChat();
+ unsubChat = db.collection("chats").doc(chatId).collection("mensajes").orderBy("fecha").onSnapshot(snap=>{
+   let html=""; snap.forEach(d=>{
+     let m=d.data(); let mine = m.de===yo.docId;
+     html+=`<div class="msg ${mine?'mine':''}"><b style="font-size:11px">${mine?'Tú':m.nombre}</b><br>${m.texto}</div>`;
+   });
+   document.getElementById('chatBox').innerHTML=html;
+   document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
+ });
+ cargarChats();
 }
-function cerrarChat(){document.getElementById('chatPrivado').style.display='none'; document.querySelectorAll('.tabs')[0].style.display='flex'; showTab('chats');}
+
+function cerrarChat(){
+ document.getElementById('chatPrivado').style.display='none';
+ document.querySelectorAll('.tabs')[0].style.display='flex';
+ showTab('chats');
+ if(unsubChat) unsubChat();
+ chatActual=null;
+}
+
 async function enviarMensaje(){
- let texto=document.getElementById('msgTexto').value; let file=document.getElementById('msgFoto').files[0]; let fotoUrl="";
- if(file){let ref=storage.ref().child('chats/'+Date.now()+"_"+file.name); await ref.put(file); fotoUrl=await ref.getDownloadURL();}
- if(!texto &&!fotoUrl) return;
- await db.collection("mensajes").add({de:yo.telReal, deNombre:yo.nombre, deComercial:yo.comercial, para:chatActual.tel, texto, fotoUrl, fecha: firebase.firestore.FieldValue.serverTimestamp()});
- document.getElementById('msgTexto').value=""; document.getElementById('msgFoto').value="";
-}
-function escucharMensajes(){
- db.collection("mensajes").orderBy("fecha").onSnapshot(snap=>{
-   let html=""; snap.forEach(doc=>{let m=doc.data(); let esChat=(m.de===yo.telReal && m.para===chatActual.tel)||(m.de===chatActual.tel && m.para===yo.telReal); if(!esChat) return; let mine=m.de===yo.telReal?"mine":""; html+=`<div class="msg ${mine}"><b style="font-size:11px;color:#00a884">${m.deNombre}</b><br>${m.texto||""}${m.fotoUrl?`<br><img src="${m.fotoUrl}" style="width:100%;border-radius:8px;margin-top:5px">`:""}</div>`;});
-   document.getElementById('chatBox').innerHTML=html; document.getElementById('chatBox').scrollTop=99999;
+ let texto=document.getElementById('msgTexto').value.trim();
+ if(!texto ||!chatActual) return;
+ let chatId = [yo.docId, chatActual].sort().join("_");
+ await db.collection("chats").doc(chatId).collection("mensajes").add({
+   texto, de: yo.docId, nombre: yo.nombre, fecha: firebase.firestore.FieldValue.serverTimestamp()
  });
+ await db.collection("chats").doc(chatId).set({participantes:[yo.docId, chatActual], ultimo:texto, fecha: firebase.firestore.FieldValue.serverTimestamp()});
+ document.getElementById('msgTexto').value="";
 }
+
 function cargarChats(){
- db.collection("mensajes").orderBy("fecha","desc").onSnapshot(snap=>{
-   let ultimos={}; snap.forEach(d=>{let m=d.data(); let otro=m.de===yo.telReal?m.para:m.de; if(!ultimos[otro]) ultimos[otro]=m;});
-   let html=""; for(let tel in ultimos){let m=ultimos[tel]; html+=`<div class="card" onclick="abrirChat('${tel}','${m.deNombre}','${m.deComercial}')"><div class="avatar">${m.deNombre[0]}</div><div><b>${m.deNombre}</b><br><span style="opacity:0.7;font-size:13px">${m.texto||'📷 Foto'}</span></div></div>`}
-   document.getElementById('listaChats').innerHTML=html||"<p style='text-align:center;opacity:0.6;margin-top:30px'>Ve a NÚMEROS para chatear</p>";
+ db.collection("chats").where("participantes","array-contains", yo.docId).orderBy("fecha","desc").onSnapshot(snap=>{
+   let html=""; snap.forEach(doc=>{
+     let c=doc.data(); let otroId = c.participantes.find(x=>x!==yo.docId);
+     html+=`<div class="card" onclick="db.collection('usuarios').doc('${otroId}').get().then(d=>abrirChat('${otroId}',d.data().nombre,d.data().comercial))"><div class="avatar">💬</div><div style="flex:1"><b>Chat ${otroId.substring(0,6)}</b><br><span style="opacity:0.6;font-size:13px">${c.ultimo||''}</span></div></div>`;
+   });
+   document.getElementById('listaChats').innerHTML=html||"<p style='text-align:center;opacity:0.6;margin-top:20px'>Aún no tienes chats<br>Ve a NÚMEROS 753</p>";
  });
 }
+
 async function publicarMuro(){
- let texto=document.getElementById('postTexto').value; let file=document.getElementById('postFoto').files[0]; let fotoUrl="";
- if(file){let ref=storage.ref().child('muro/'+Date.now()+"_"+file.name); await ref.put(file); fotoUrl=await ref.getDownloadURL();}
- if(!texto &&!fotoUrl) return alert('Escribe algo bb');
- await db.collection("muro").add({autor:yo.nombre, comercial:yo.comercial, texto, fotoUrl, fecha: firebase.firestore.FieldValue.serverTimestamp()});
- document.getElementById('postTexto').value=""; document.getElementById('postFoto').value="";
+ let texto=document.getElementById('postTexto').value.trim();
+ if(!texto) return alert('Escribe algo bb');
+ await db.collection("muro").add({texto, nombre:yo.nombre, comercial:yo.comercial, fecha: firebase.firestore.FieldValue.serverTimestamp()});
+ document.getElementById('postTexto').value="";
 }
+
 function cargarMuro(){
- db.collection("muro").orderBy("fecha","desc").onSnapshot(snap=>{
-   let html=""; snap.forEach(doc=>{let p=doc.data(); html+=`<div class="muro-post"><b>${p.autor}</b> <span style="color:#00a884;font-size:12px">${p.comercial}</span><p style="margin-top:8px">${p.texto||""}</p>${p.fotoUrl?`<img src="${p.fotoUrl}">`:""}</div>`});
+ db.collection("muro").orderBy("fecha","desc").limit(50).onSnapshot(snap=>{
+   let html=""; snap.forEach(doc=>{
+     let p=doc.data(); html+=`<div class="muro-post"><b>${p.nombre}</b> <span style="color:#00a884;font-size:11px">${p.comercial}</span><p style="margin-top:8px">${p.texto}</p></div>`;
+   });
    document.getElementById('listaMuro').innerHTML=html;
  });
 }
