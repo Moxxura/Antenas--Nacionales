@@ -3,163 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Antenas Nacionales 753 📡🇲🇽</title>
+<title>Antenas Nacionales 753</title>
 <style>
-*{box-sizing:border-box;margin:0;font-family:'Segoe UI',system-ui}
+*{box-sizing:border-box;margin:0;font-family:system-ui}
 body{background:#111b21}
-.app{max-width:430px;margin:auto;min-height:100vh;background:#0b141a;display:flex;flex-direction:column;position:relative;border-left:1px solid #1f2c34;border-right:1px solid #1f2c34}
-.login{position:absolute;inset:0;background:#111b21;z-index:20;padding:22px;display:flex;flex-direction:column;overflow-y:auto}
-.input{background:#202c33;border:0;border-radius:8px;padding:14px;color:#fff;width:100%;margin:7px 0;outline:none}
-.btn{width:100%;background:#00a884;color:#111b21;border:0;padding:14px;border-radius:8px;font-weight:900;margin-top:10px;cursor:pointer}
-.top{background:#202c33;padding:12px 14px;display:flex;justify-content:space-between;color:#e9edef}
-.tabs{display:flex;background:#202c33}.tabs div{flex:1;text-align:center;padding:11px 0;font-size:11px;font-weight:800;color:#8696a0;border-bottom:3px solid transparent;cursor:pointer}.tabs div.active{color:#00a884;border-color:#00a884}
-.list{flex:1;overflow-y:auto}
-.contact{display:flex;gap:12px;padding:12px;border-bottom:1px solid #1f2c34;cursor:pointer;color:#e9edef;align-items:center}
-.avatar{width:48px;height:48px;border-radius:50%;background:#00a884;display:grid;place-items:center;font-weight:900;color:#111b21;flex-shrink:0}
-.id-preview{background:#0a332c;border:1px dashed #00a884;border-radius:8px;padding:10px;text-align:center;color:#00a884;font-weight:900;margin:10px 0}
-.nacionalBox{background:#1f2c33;border-radius:12px;padding:12px;margin:10px}
-.chatView{position:absolute;inset:0;background:#0b141a;z-index:10;display:none;flex-direction:column}.chatView.show{display:flex}
-.chatHeader{background:#202c33;padding:10px;display:flex;gap:10px;align-items:center;color:#fff}
-.msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px;background:#0b141a}
-.bubble{max-width:78%;padding:8px 10px;border-radius:8px;font-size:14px}.me{align-self:flex-end;background:#005c4b;color:#e9edef}.other{align-self:flex-start;background:#202c33;color:#e9edef}
-.sendBar{display:flex;padding:8px;background:#202c33;gap:8px}
+.app{max-width:430px;margin:auto;min-height:100vh;background:#0b141a;display:flex;flex-direction:column;position:relative;border:1px solid #1f2c34}
+.login{position:absolute;inset:0;background:#111b21;z-index:20;padding:22px;display:flex;flex-direction:column}
+.input{background:#202c33;border:0;border-radius:8px;padding:14px;color:#fff;width:100%;margin:7px 0}
+.btn{width:100%;background:#00a884;color:#111b21;border:0;padding:14px;border-radius:8px;font-weight:900;margin-top:10px}
+.top{background:#202c33;padding:12px;color:#fff;display:flex;justify-content:space-between}
+.tabs{display:flex;background:#202c33}
+.tabs div{flex:1;text-align:center;padding:11px;font-size:11px;color:#8696a0;border-bottom:3px solid transparent}
+.tabs div.active{color:#00a884;border-color:#00a884}
+.list{flex:1;overflow:auto}
+.contact{display:flex;gap:12px;padding:12px;border-bottom:1px solid #1f2c34;color:#fff}
+.avatar{width:48px;height:48px;border-radius:50%;background:#00a884;display:grid;place-items:center;font-weight:900;color:#111b21}
+.chatView{position:absolute;inset:0;background:#0b141a;z-index:10;display:none;flex-direction:column}
+.chatView.show{display:flex}
+.msgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
+.bubble{max-width:78%;padding:8px 10px;border-radius:8px;font-size:14px}
+.me{align-self:flex-end;background:#005c4b;color:#fff}
+.other{align-self:flex-start;background:#202c33;color:#fff}
 </style>
 </head>
 <body>
 <div class="app">
 <div class="login" id="login">
-<h1 style="color:#00a884;text-align:center;font-size:22px">Antenas Nacional REAL 📡🇲🇽</h1>
-<p style="color:#8696a0;text-align:center;font-size:12px;margin:8px 0">10M IDs únicos • Chat real México</p>
+<h1 style="color:#00a884;text-align:center">Antenas REAL 📡</h1>
+<p style="color:#8696a0;text-align:center;font-size:12px;margin:8px 0">ID Nacional: <span id="previewId"></span></p>
 <input class="input" id="nombre" placeholder="Tu nombre">
-<div class="id-preview" id="previewId">Generando ID...</div>
-<input class="input" id="codigo" placeholder="Código: MOXXU2026">
+<input class="input" id="codigo" placeholder="Código: MOXXURA2026">
 <button class="btn" onclick="registrar()">ENTRAR A RED NACIONAL</button>
 </div>
-<div class="top"><div><b>Antenas 753</b><br><span style="font-size:11px;color:#00a884" id="miLinea">Conectando...</span></div><div id="miIdCorto" style="font-size:10px;background:#00a884;color:#111b21;padding:4px 8px;border-radius:10px;font-weight:900">ID</div></div>
-<div class="tabs"><div class="active" onclick="cambiarTab(0)">CHATS</div><div onclick="cambiarTab(1)">BUSCAR 🇲🇽</div><div onclick="cambiarTab(2)">GENTE</div></div>
+<div class="top"><div><b>Antenas 753</b><br><span id="miLinea" style="font-size:11px;color:#00a884"></span></div><div id="miIdCorto" style="background:#00a884;color:#111b21;padding:4px 8px;border-radius:10px;font-size:10px;font-weight:900">ID</div></div>
+<div class="tabs"><div class="active" onclick="cambiarTab(0)">CHATS</div><div onclick="cambiarTab(1)">BUSCAR</div><div onclick="cambiarTab(2)">GENTE</div></div>
 <div class="list" id="lista"></div>
-<div class="chatView" id="chatView">
-<div class="chatHeader"><span style="font-size:24px;cursor:pointer" onclick="cerrarChat()">←</span><div class="avatar" id="chatAvatar">A</div><div><div id="chatName"></div><div style="font-size:11px;color:#00a884">en línea por antenas</div></div></div>
-<div class="msgs" id="msgs"></div>
-<div class="sendBar"><input id="msgInput" placeholder="Mensaje" style="flex:1;background:#2a3942;border:0;border-radius:20px;padding:12px;color:#fff;outline:none" onkeydown="if(event.key==='Enter')enviar()"><button onclick="enviar()" style="background:#00a884;border:0;width:46px;height:46px;border-radius:50%">➤</button></div>
-</div>
+<div class="chatView" id="chatView"><div style="background:#202c33;padding:10px;display:flex;gap:10px;color:#fff"><span onclick="cerrarChat()" style="cursor:pointer">←</span><div class="avatar" id="chatAvatar"></div><div id="chatName"></div></div><div class="msgs" id="msgs"></div><div style="display:flex;padding:8px;background:#202c33;gap:8px"><input id="msgInput" style="flex:1;background:#2a3942;border:0;border-radius:20px;padding:12px;color:#fff" placeholder="Mensaje" onkeydown="if(event.key==='Enter')enviar()"><button onclick="enviar()" style="background:#00a884;border:0;width:46px;height:46px;border-radius:50%">➤</button></div></div>
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, get, onValue, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCW48tHkz4CwnJ_t60U8nZlvOmUxvA6uIE",
-  authDomain: "antenas-nacionales.firebaseapp.com",
-  databaseURL: "https://antenas-nacionales-default-rtdb.firebaseio.com",
-  projectId: "antenas-nacionales",
-  storageBucket: "antenas-nacionales.firebasestorage.app",
-  messagingSenderId: "264813695600",
-  appId: "1:264813695600:web:30d0a8a18bfa8cfb131ab5"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const CODIGO="MOXXU2026", BASE=7530000000, RANGO=10000000;
-let yo=JSON.parse(localStorage.getItem('yo_antena_real')||'null');
-let chatActual=null, tabActual=0, idGen=null;
-
-function genID(){ return BASE + Math.floor(Math.random()*RANGO); }
-function preview(){ if(!yo){ idGen=genID(); document.getElementById('previewId').textContent='Tu ID Nacional: '+idGen; } }
-if(yo){
-  document.getElementById('login').style.display='none';
-  document.getElementById('miLinea').textContent=yo.nombre+' | '+yo.linea;
-  document.getElementById('miIdCorto').textContent='ID: '+yo.linea;
-}else{ preview(); }
-
-window.registrar=async function(){
-  const n=document.getElementById('nombre').value.trim(), c=document.getElementById('codigo').value.trim();
-  if(!n) return alert('Pon tu nombre bb');
-  if(c!==CODIGO) return alert('Código incorrecto');
-  if(!idGen) idGen=genID();
-  let existe=true, intentos=0;
-  while(existe && intentos<15){
-    const snap=await get(ref(db,'usuarios/'+idGen));
-    if(!snap.exists()) existe=false; else{ idGen=genID(); intentos++; }
-  }
-  await set(ref(db,'usuarios/'+idGen),{nombre:n,linea:String(idGen),fecha:Date.now()});
-  yo={nombre:n,linea:String(idGen)}; localStorage.setItem('yo_antena_real',JSON.stringify(yo));
-  document.getElementById('login').style.display='none';
-  document.getElementById('miLinea').textContent=n+' | '+idGen;
-  document.getElementById('miIdCorto').textContent='ID: '+idGen;
-  render();
-}
-window.cambiarTab=function(i){ tabActual=i; document.querySelectorAll('.tabs div').forEach((d,idx)=>d.classList.toggle('active',idx===i)); render(); }
-window.buscarNacional=async function(){
-  const idB=document.getElementById('buscarIdInput').value.trim();
-  const res=document.getElementById('resultadoBusqueda');
-  if(!idB) return alert('Pon ID');
-  if(idB===yo.linea) return res.innerHTML='<p style="color:#8696a0">Ese eres tú 😅</p>';
-  const snap=await get(ref(db,'usuarios/'+idB));
-  if(!snap.exists()){ res.innerHTML=`<div style="padding:10px;color:#f15c6d;background:#1f2c33;border-radius:8px">❌ ID ${idB} no encontrado</div>`; return; }
-  const u=snap.val();
-  res.innerHTML=`<div style="background:#0b141a;border:1px solid #1f2c34;padding:12px;border-radius:8px;margin-top:10px"><div style="display:flex;gap:10px"><div class="avatar">${u.nombre[0].toUpperCase()}</div><div><b>${u.nombre}</b><br><span style="color:#00a884">ID: ${u.linea} • Encontrado 🇲🇽</span></div></div><button class="btn" onclick="abrirChatDirecto('${u.nombre}','${u.linea}')">CHATEAR AHORA 📡</button></div>`;
-}
-window.abrirChatDirecto=function(nombre,linea){
-  chatActual={nombre,linea};
-  document.getElementById('chatView').classList.add('show');
-  document.getElementById('chatName').textContent=nombre;
-  document.getElementById('chatAvatar').textContent=nombre[0].toUpperCase();
-  escucharMensajes();
-}
-function getChatId(a,b){ return [a,b].sort().join('_'); }
-function escucharMensajes(){
-  if(!chatActual) return;
-  const chatId=getChatId(yo.linea, chatActual.linea);
-  onValue(ref(db,'chats/'+chatId),(snap)=>{
-    const msgsDiv=document.getElementById('msgs'); msgsDiv.innerHTML='';
-    if(snap.exists()){
-      Object.values(snap.val()).forEach(m=>{
-        const b=document.createElement('div'); b.className='bubble '+(m.de===yo.linea?'me':'other'); b.textContent=m.t; msgsDiv.appendChild(b);
-      });
-    }
-    msgsDiv.scrollTop=msgsDiv.scrollHeight;
-  });
-}
-window.enviar=async function(){
-  const input=document.getElementById('msgInput'); const t=input.value.trim(); if(!t||!chatActual) return;
-  const chatId=getChatId(yo.linea, chatActual.linea);
-  await push(ref(db,'chats/'+chatId),{t,de:yo.linea,para:chatActual.linea,hora:Date.now()});
-  await set(ref(db,'contactos/'+yo.linea+'/'+chatActual.linea),{nombre:chatActual.nombre,linea:chatActual.linea,ultimo:t});
-  await set(ref(db,'contactos/'+chatActual.linea+'/'+yo.linea),{nombre:yo.nombre,linea:yo.linea,ultimo:t});
-  input.value='';
-}
-window.cerrarChat=function(){ document.getElementById('chatView').classList.remove('show'); render(); }
-async function render(){
-  const lista=document.getElementById('lista');
-  if(!yo) return;
-  if(tabActual===0){
-    lista.innerHTML='<p style="color:#8696a0;text-align:center;padding:20px">Cargando chats...</p>';
-    const snap=await get(ref(db,'contactos/'+yo.linea));
-    if(!snap.exists()){ lista.innerHTML='<p style="color:#8696a0;text-align:center;padding:30px">Sin chats aún<br>Ve a BUSCAR 🇲🇽</p>'; return; }
-    lista.innerHTML='';
-    Object.values(snap.val()).forEach(c=>{
-      const d=document.createElement('div'); d.className='contact';
-      d.innerHTML=`<div class="avatar">${c.nombre[0].toUpperCase()}</div><div style="flex:1"><div style="font-weight:600">${c.nombre}</div><div style="font-size:12px;color:#8696a0">${c.ultimo||''}</div></div><div style="font-size:10px;color:#00a884">${c.linea}</div>`;
-      d.onclick=()=>abrirChatDirecto(c.nombre,c.linea); lista.appendChild(d);
-    });
-  }
-  if(tabActual===1){
-    lista.innerHTML=`<div class="nacionalBox"><p style="color:#00a884;font-weight:800;text-align:center">🔍 BUSCADOR NACIONAL REAL</p><input class="input" id="buscarIdInput" placeholder="Ej: 7530123456" type="number"><button class="btn" onclick="buscarNacional()">BUSCAR EN TODO MÉXICO 📡</button><div id="resultadoBusqueda"></div><p style="color:#3b4a54;font-size:10px;text-align:center;margin-top:10px">Tu ID: ${yo.linea} • Compártelo</p></div>`;
-  }
-  if(tabActual===2){
-    lista.innerHTML='<p style="color:#8696a0;text-align:center;padding:20px">Cargando gente...</p>';
-    const snap=await get(ref(db,'usuarios'));
-    if(!snap.exists()) return;
-    lista.innerHTML=`<p style="color:#00a884;text-align:center;padding:10px;font-size:12px">${Object.keys(snap.val()).length} personas en la red 🇲🇽</p>`;
-    Object.values(snap.val()).filter(u=>u.linea!==yo.linea).slice(0,100).forEach(u=>{
-      const d=document.createElement('div'); d.className='contact';
-      d.innerHTML=`<div class="avatar">${u.nombre[0].toUpperCase()}</div><div style="flex:1"><div style="font-weight:600">${u.nombre}</div><div style="font-size:12px;color:#00a884">ID: ${u.linea}</div></div>`;
-      d.onclick=()=>abrirChatDirecto(u.nombre,u.linea); lista.appendChild(d);
-    });
-  }
-}
+const firebaseConfig = { apiKey: "AIzaSyCW48tHkz4CwnJ_t60U8nZlvOmUxvA6uIE", authDomain: "antenas-nacionales.firebaseapp.com", databaseURL: "https://antenas-nacionales-default-rtdb.firebaseio.com", projectId: "antenas-nacionales", storageBucket: "antenas-nacionales.firebasestorage.app", messagingSenderId: "264813695600", appId: "1:264813695600:web:30d0a8a18bfa8cfb131ab5" };
+const app = initializeApp(firebaseConfig); const db = getDatabase(app);
+const BASE=7530000000, RANGO=10000000;
+const CODIGOS=["MOXXU2026","MOXXURA2026","MOXXURA23","moxxura2026","Moxxura2026"];
+let yo=JSON.parse(localStorage.getItem('yo_antena_real')||'null'); let chatActual=null, tabActual=0, idGen=null;
+function genID(){return BASE+Math.floor(Math.random()*RANGO)}
+function preview(){if(!yo){idGen=genID(); document.getElementById('previewId').textContent=idGen}}
+if(yo){document.getElementById('login').style.display='none';document.getElementById('miLinea').textContent=yo.nombre+' | '+yo.linea;document.getElementById('miIdCorto').textContent='ID: '+yo.linea}else{preview()}
+window.registrar=async function(){const n=document.getElementById('nombre').value.trim(), c=document.getElementById('codigo').value.trim(); if(!n) return alert('Pon tu nombre bb'); if(!CODIGOS.includes(c)) return alert('Código incorrecto, usa MOXXURA2026'); if(!idGen) idGen=genID(); let existe=true; let intentos=0; while(existe&&intentos<15){const snap=await get(ref(db,'usuarios/'+idGen)); if(!snap.exists()) existe=false; else{idGen=genID(); intentos++}} await set(ref(db,'usuarios/'+idGen),{nombre:n,linea:String(idGen),fecha:Date.now()}); yo={nombre:n,linea:String(idGen)}; localStorage.setItem('yo_antena_real',JSON.stringify(yo)); document.getElementById('login').style.display='none'; document.getElementById('miLinea').textContent=n+' | '+idGen; document.getElementById('miIdCorto').textContent='ID: '+idGen; render()}
+window.cambiarTab=function(i){tabActual=i; document.querySelectorAll('.tabs div').forEach((d,idx)=>d.classList.toggle('active',idx===i)); render()}
+window.buscarNacional=async function(){const idB=document.getElementById('buscarIdInput').value.trim(); const res=document.getElementById('resultadoBusqueda'); if(!idB) return; if(idB===yo.linea) return res.innerHTML='Eres tú bb'; const snap=await get(ref(db,'usuarios/'+idB)); if(!snap.exists()){res.innerHTML='No encontrado'; return} const u=snap.val(); res.innerHTML=`<div style="padding:12px;background:#1f2c33;border-radius:8px;margin-top:10px;color:#fff"><b>${u.nombre}</b><br>ID: ${u.linea}<br><button class="btn" onclick="abrirChatDirecto('${u.nombre}','${u.linea}')">CHATEAR</button></div>`}
+window.abrirChatDirecto=function(nombre,linea){chatActual={nombre,linea}; document.getElementById('chatView').classList.add('show'); document.getElementById('chatName').textContent=nombre; document.getElementById('chatAvatar').textContent=nombre[0].toUpperCase(); escuchar()}
+function getChatId(a,b){return [a,b].sort().join('_')}
+function escuchar(){if(!chatActual) return; const chatId=getChatId(yo.linea, chatActual.linea); onValue(ref(db,'chats/'+chatId),(snap)=>{const msgsDiv=document.getElementById('msgs'); msgsDiv.innerHTML=''; if(snap.exists()){Object.values(snap.val()).forEach(m=>{const b=document.createElement('div'); b.className='bubble '+(m.de===yo.linea?'me':'other'); b.textContent=m.t; msgsDiv.appendChild(b)})} msgsDiv.scrollTop=msgsDiv.scrollHeight})}
+window.enviar=async function(){const input=document.getElementById('msgInput'); const t=input.value.trim(); if(!t||!chatActual) return; const chatId=getChatId(yo.linea, chatActual.linea); await push(ref(db,'chats/'+chatId),{t,de:yo.linea,para:chatActual.linea,hora:Date.now()}); await set(ref(db,'contactos/'+yo.linea+'/'+chatActual.linea),{nombre:chatActual.nombre,linea:chatActual.linea,ultimo:t}); await set(ref(db,'contactos/'+chatActual.linea+'/'+yo.linea),{nombre:yo.nombre,linea:yo.linea,ultimo:t}); input.value=''}
+window.cerrarChat=function(){document.getElementById('chatView').classList.remove('show'); render()}
+async function render(){const lista=document.getElementById('lista'); if(!yo) return; if(tabActual===0){const snap=await get(ref(db,'contactos/'+yo.linea)); if(!snap.exists()){lista.innerHTML='<p style="color:#8696a0;text-align:center;padding:30px">Sin chats<br>Ve a BUSCAR</p>'; return} lista.innerHTML=''; Object.values(snap.val()).forEach(c=>{const d=document.createElement('div'); d.className='contact'; d.innerHTML=`<div class="avatar">${c.nombre[0].toUpperCase()}</div><div style="flex:1"><div>${c.nombre}</div><div style="font-size:12px;color:#8696a0">${c.ultimo||''}</div></div><div style="font-size:10px;color:#00a884">${c.linea}</div>`; d.onclick=()=>abrirChatDirecto(c.nombre,c.linea); lista.appendChild(d)})} if(tabActual===1){lista.innerHTML=`<div style="margin:10px;background:#1f2c33;padding:12px;border-radius:12px"><input class="input" id="buscarIdInput" placeholder="Pon ID 753..." type="number"><button class="btn" onclick="buscarNacional()">BUSCAR EN MEXICO</button><div id="resultadoBusqueda" style="margin-top:10px"></div><p style="color:#3b4a54;font-size:10px;text-align:center;margin-top:10px">Tu ID: ${yo.linea}</p></div>`} if(tabActual===2){const snap=await get(ref(db,'usuarios')); lista.innerHTML=`<p style="color:#00a884;text-align:center;padding:10px;font-size:12px">${Object.keys(snap.val()).length} en red</p>`; Object.values(snap.val()).filter(u=>u.linea!==yo.linea).slice(0,100).forEach(u=>{const d=document.createElement('div'); d.className='contact'; d.innerHTML=`<div class="avatar">${u.nombre[0].toUpperCase()}</div><div>${u.nombre}<br><span style="color:#00a884;font-size:11px">${u.linea}</span></div>`; d.onclick=()=>abrirChatDirecto(u.nombre,u.linea); lista.appendChild(d)})}}
 if(yo) render();
-</script>
-</body>
-</html>
+</script></body></html>
